@@ -1,0 +1,41 @@
+body{
+	/*font-family: 'Cabin', sans-serif;*/
+	font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
+	overflow-x:hidden;
+}
+
+.main{
+	height:100%;
+	width:100%;
+}
+h3 { 
+ border:0 solid #fff; 
+ border-bottom-width:1px;
+ padding-bottom:15px;
+ text-align: center;
+}
+
+#main3{
+	position:absolute;
+	top:0%;
+	left:0%;
+}
+
+#h1Size{
+	font-size: 2.4rem;
+	line-height: 3.2rem;
+	letter-spacing: 0;
+	font-weight: 100;
+	color: #212121;
+	text-transform: inherit;
+	margin-bottom: 1rem;
+	text-align: center;
+	font-weight:light;
+} 
+
+.main3But{
+	float:left;
+	margin-right:.75em;
+	margin-left:.75em;
+	margin-bottom:1em;
+}

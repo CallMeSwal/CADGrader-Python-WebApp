@@ -1,0 +1,391 @@
+<?php
+	session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CADGrader: Automatically Grade CAD</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+	
+	<!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+	<!-- <script src="https://s.codepen.io/assets/libs/modernizr.js" type="text/javascript"></script> -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+	<link href="css/data.css" rel="stylesheet">
+	  
+	
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<?php
+		if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSION['attemptUsername']) && isset($_SESSION['attemptPassword']) && isset($_SESSION['Version'])){
+			//must change this to take password from server
+			$version = $_SESSION['Version'];
+			$usernameLog = $_SESSION['username'];
+			if($_SESSION['username']!=$_SESSION['attemptUsername'] || $_SESSION['password']!=$_SESSION['attemptPassword'] || $_SESSION['Version']=="student"){
+				header("Location: accessCheck.php"); /* Redirect browser */
+				exit();
+			}
+			else{
+				//dunno if i need this
+				//$_SESSION['username']="";
+				//$_SESSION['password']="";
+			}
+		}
+		else{
+			header("Location: accessCheck.php"); /* Redirect browser */
+			exit();
+		}
+	?>
+    <!-- Page Content -->
+	<section class="main">
+		<div id="fileViewer" class="text-center">
+			<iframe id="fullViewer" src="" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe>
+			<span id="closeFullScreen" class='glyphicon glyphicon-remove fileIcon'></span>
+			<div class="row">
+				<div class="col-lg-12">
+						<br>
+						<form id="filterBox2" class="form-inline">
+							<!--<div class="form-group">
+								<select class="form-control" id="flagFilt2">
+									<option value="all"></option>
+									<option value="Flagged">Flagged</option>
+									<option value="Not Flagged">Not Flagged</option>
+								</select>
+							</div>-->
+							<div class="form-group">
+								<input type="text" class="form-control" id="studentNumberFilt2" placeholder="Student Number">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="assNameFilt2" placeholder="Assignment Name">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="fileNameFilt2" placeholder="File Name">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="ansFileNameFilt2" placeholder="Answer File Name">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="versionFilt2" placeholder="Version">
+							</div>
+							<div class="form-group">
+								<!--<input type="text" class="form-control" id="subjFilt2" placeholder="Enter Subjective Mark" maxlength="1">-->
+								<select class="form-control" id="subjFilt2">
+									<option value="">Enter Subjective Mark</option>
+									<option value="0">0/20</option>
+									<option value="1">1/20</option>
+									<option value="2">2/20</option>
+									<option value="3">3/20</option>
+									<option value="4">4/20</option>
+									<option value="5">5/20</option>
+									<option value="6">6/20</option>
+									<option value="7">7/20</option>
+									<option value="8">8/20</option>
+									<option value="9">9/20</option>
+									<option value="10">10/20</option>
+									<option value="11">11/20</option>
+									<option value="12">12/20</option>
+									<option value="13">13/20</option>
+									<option value="14">14/20</option>
+									<option value="15">15/20</option>
+									<option value="16">16/20</option>
+									<option value="17">17/20</option>
+									<option value="18">18/20</option>
+									<option value="19">19/20</option>
+									<option value="20">20/20</option>
+								</select>
+							</div>
+							<!--<h3><span id="closeFileViewer" maxlength=3; class='glyphicon glyphicon-remove'></span></h3>-->
+						</form>
+						<br>
+						<a id="updateFile" class="btn btn-danger btn-small" href="#" style="float:left; margin-right:1em;">Update</a>
+						<a id="showLog" class="btn btn-danger btn-small" href="#" style="float:left; margin-right:1em;">Log</a>
+						<a id="markingGuide" class="btn btn-danger btn-small" href="#" style="float:left; margin-right:1em;">Marking Guide</a>
+						<br>
+						<br>
+						<hr>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<!--<span><div class="col-xs-6"><h4>Student File</h4><iframe style="width:100%; height:20em;" src="https://sketchfab.com/models/72cc713986134501b17e96425347ed82/embed" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe></div></span>-->
+				<span><div class="col-xs-6"><h4 style="padding-left:1em;"><span style="float:left;">Student File</span><span id="fullScreenStudent" class='glyphicon glyphicon-fullscreen fileIcon'></span><a id="studentFileDownloadLink" href=""><span class='glyphicon glyphicon-download-alt fileIcon'></span></a></h4><iframe style="width:100%; height:20em;" id="studentFileViewer" src="http://www.viewstl.com/?embedded&url=http://swal.xyz/1.stl" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe></div></span>
+				<span><div class="col-xs-6"><h4 style="padding-left:1em;"><span style="float:left;">Answer File</span><span id="fullScreenAnswer" class='glyphicon glyphicon-fullscreen fileIcon'></span><a id="answerFileDownloadLink" href=""><span class='	glyphicon glyphicon-download-alt fileIcon'></span></a></h4><iframe style="width:100%; height:20em;" id="answerFileViewer" src="http://www.viewstl.com/?embedded&url=http://localhost:92/1.stl&local" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe></div></span>
+				<!--<span><div class="col-xs-6"><h4>Answer File</h4><iframe style="width:95%; height:20em;"  src="https://sketchfab.com/models/72cc713986134501b17e96425347ed82/embed" frameborder="0" allowvr allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe></div></span>-->
+				<!--<iframe src="jsstl-master/index.html" style="margin-right:2em;"></iframe>
+				<iframe src="jsstl-master/index.html"></iframe>-->
+			</div>
+		</div>
+	</section>
+	<section id="main3" class="main">
+		<div id="slideOutNav"><span class='glyphicon glyphicon-chevron-left'></span></div>
+		<div id="colFilter">
+			<h2><span id="closeColFilter" class='glyphicon glyphicon-remove'></span></h2>
+			<label class="checkbox colFilterOpt" id="flagCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 1)" id="flagCheck" checked><p>Flag</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="studentNumberCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 2)"  id="studentNumberCheck" checked><p>Student Number</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="assignmentNameCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 3)"  id="assignmentNameCheck" checked><p>Assignment Name</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="filenameCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 4)"  id="filenameCheck" checked><p>Filename</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="answerFilenameCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 5)"  id="answerFilenameCheck" checked><p>Answer Filename</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="versionCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 6)"  id="versionCheck" checked><p>Version</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="VolCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 7)"  id="VolCheck" checked><p>Volume Mark</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="SACheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 8)"  id="SACheck" checked><p>Surface Area Mark</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="CoGCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 9)"  id="CoGCheck" checked><p>Center of Gravity Mark</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="MoICheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 10)"  id="MoICheck" checked><p>Moment of Inertia Mark</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="SubCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 11)" id="SubCheck" checked><p>Subjective Mark</p>
+			</label>
+			<label class="checkbox colFilterOpt" id="totMarkCheckBox">
+				<input type="checkbox" value="" onchange="checkbox(this.id, 12)"  id="totMarkCheck" checked><p>Total Mark</p>
+			</label>
+		</div>
+		<div class="container">
+			<br>
+			<div class="row">
+				<div class="col-lg-12 text-center"><br>
+					<button id="backBut" type="button" class="btn btn-danger main3But"><h4><b>BACK</b></h4></button>
+					<button id="filterBut" type="button" class="btn btn-danger main3But"><h4><b>FILTER</b></h4></button>
+					<?php
+						if($_SESSION['Version']=="admin"){
+							echo '<button id="csvBut" type="button" class="btn btn-danger main3But"><h4><b> CSV <span class="glyphicon glyphicon-download-alt"></span></b></h4></button>';
+							//echo '<button id="repBut" type="button" class="btn btn-danger main3But"><h4><b> REP <span class="glyphicon glyphicon-list-alt"></span></b></h4></button>';
+							echo '<button id="delBut" type="button" class="btn btn-danger main3But"><h4><b> DEL <span class="glyphicon glyphicon-trash"></span></b></h4></button>';
+						}
+					?>
+					<h1 id="dateTitle" style='float:right;'>Jane 18/17</h1>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+						<form id="filterBox" class="form-inline">
+							<div class="form-group">
+								<select class="form-control" id="flagFilt">
+									<option value=""></option>
+									<option value="flaggedBox">Flagged</option>
+									<option value="notFlaggedBox">Not Flagged</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="studentNumberFilt" placeholder="Student Number">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="assNameFilt" placeholder="Assignment Name">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="ansFileNameFilt" placeholder="Answer File Name">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="versionFilt" placeholder="Version">
+							</div>
+						</form>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-lg-12 text-center">
+					<h1>Student Grades For ENG 1C03</h1><br>
+					<div  id="dataTableCont">
+					<div id="demo">
+						<!-- Responsive table starts here -->
+						<!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+						<div class="table-responsive-vertical shadow-z-1">
+							<!-- Table starts here -->
+							<table id="table" class="table table-hover table-mc-red">
+								<thead id="thead">
+									<tr>
+										<th>Flag</th>
+										<th>Student Number</th>
+										<th>Assignment Name</th>
+										<th>Submission File Name</th>
+										<th>Answer File Name</th>
+										<th>Version</th>
+										<th>Volume Mark</th>
+										<th>Surface Area Mark</th>
+										<th>Center of Gravity Mark</th>
+										<th>Moment of Inertia Mark</th>
+										<th>Subjective Mark</th>
+										<th>Total Mark</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+										$servername = "localhost";
+										$username = "root";
+										$password = "";
+										$db = "cadgrader";
+										$port = 90;
+										
+										$currentDate = date('Y-m-d', time());
+										
+										// Create connection
+										$conn = new mysqli($servername, $username, $password, $db);
+
+										// Check connection
+										if ($conn->connect_error) {
+											die("Connection failed: " . $conn->connect_error);
+										} 
+										
+										$result = mysqli_query($conn,"SELECT * FROM marking_data");
+										$counter=1;
+										
+										while($row = mysqli_fetch_array($result))
+										{
+											//if(strpos($_SESSION['Version'], $row['Version'][1])!==false || $_SESSION['Version']=="admin"){
+											if($_SESSION['Version']==$row['Version'] || $_SESSION['Version']=="admin"){
+												if($currentDate<$row['Marking_Date']){
+													if($row['Flag']){
+														echo "<tr class='flaggedRow' id='".$row['Identifier']."' >";
+														echo "<td data-title='Flag' class='flaggedBox'><span class='glyphicon glyphicon-ok' style='z-index:10;'></span></td>";
+													}
+													else{
+														echo "<tr  id='".$row['Identifier']."'>";
+														echo "<td class='notFlaggedBox'><span class='glyphicon glyphicon-minus'></span></td>";
+													}
+													echo '<td  data-title="Student Number">' . $row['Student_Number'] . '</td>';
+													echo '<td  data-title="Assignment Name">' . $row['Assignment_Name'] . '</td>';
+													echo '<td  data-title="Submission File Name">' . $row['Submission_File_Name'] . '</td>';
+													echo '<td  data-title="Answer File Name">' . $row['Answer_File_Name'] . '</td>';
+													echo '<td  data-title="Version">' . $row['Version'] . '</td>';
+													echo '<td  data-title="Volume Mark">' . $row['Vol_Mark'] . '</td>';
+													echo '<td  data-title="Surface Area Mark">' . $row['SA_Mark'] . '</td>';
+													echo '<td  data-title="Center of Gravity Mark">' . $row['CoG_Mark'] . '</td>';
+													echo '<td  data-title="Moment of Inertia Mark">' . $row['MoI_Mark'] . '</td>';
+													echo '<td  data-title="Subjective Mark">' . $row['Subjective_Mark'] . '</td>';
+													echo '<td  data-title="Total Mark">' . $row['Total_Mark'] . '</td>';
+													echo '<td  style="display:none;">' . $row['Reasons_Flagged'] . '</td>';
+													echo '<td  style="display:none;">' . $row['Last_Marked'] . '</td>';
+
+													echo '</tr>';
+													$counter+=1;
+												}
+											}
+										}
+										mysqli_close($conn);
+									?>
+								</tbody>
+							</table>
+						</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</section>
+	<div class="modal fade product_view" id="product_view">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<a href="#" data-dismiss="modal" class="class pull-right"><span class="glyphicon glyphicon-remove"></span></a>
+					<h3 class="modal-title">HTML5 is a markup language</h3>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6 product_img">
+							<img src="http://img.bbystatic.com/BestBuy_US/images/products/5613/5613060_sd.jpg" class="img-responsive">
+						</div>
+						<div class="col-md-6 product_content">
+							<h4>Product Id: <span>51526</span></h4>
+							<div class="rating">
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								<span class="glyphicon glyphicon-star"></span>
+								(10 reviews)
+							</div>
+							<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+							<h3 class="cost"><span class="glyphicon glyphicon-usd"></span> 75.00 <small class="pre-cost"><span class="glyphicon glyphicon-usd"></span> 60.00</small></h3>
+							<div class="row">
+								<div class="col-md-4 col-sm-6 col-xs-12">
+									<select class="form-control" name="select">
+										<option value="" selected="">Color</option>
+										<option value="black">Black</option>
+										<option value="white">White</option>
+										<option value="gold">Gold</option>
+										<option value="rose gold">Rose Gold</option>
+									</select>
+								</div>
+								<!-- end col -->
+								<div class="col-md-4 col-sm-6 col-xs-12">
+									<select class="form-control" name="select">
+										<option value="">Capacity</option>
+										<option value="">16GB</option>
+										<option value="">32GB</option>
+										<option value="">64GB</option>
+										<option value="">128GB</option>
+									</select>
+								</div>
+								<!-- end col -->
+								<div class="col-md-4 col-sm-12">
+									<select class="form-control" name="select">
+										<option value="" selected="">QTY</option>
+										<option value="">1</option>
+										<option value="">2</option>
+										<option value="">3</option>
+									</select>
+								</div>
+								<!-- end col -->
+							</div>
+							<div class="space-ten"></div>
+							<div class="btn-ground">
+								<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+								<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-heart"></span> Add To Wishlist</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery Version 1.11.1 after uploading to server change this
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!--<script src="js/three.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/detector.js"></script>-->
+	<script>
+		var version = <?php echo json_encode($version); ?>;
+		var usernameLog = <?php echo json_encode($usernameLog); ?>;
+	</script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/data.js"></script>
+</body>
+</html>

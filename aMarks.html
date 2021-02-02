@@ -1,0 +1,235 @@
+<?php
+	session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CADGrader: Automatically Grade CAD</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+	
+	<!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+	<!-- <script src="https://s.codepen.io/assets/libs/modernizr.js" type="text/javascript"></script> -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+	<link href="css/assMarks.css" rel="stylesheet">
+	  
+	
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<?php
+		if(isset($_SESSION['username']) && isset($_SESSION['password']) && isset($_SESSION['attemptUsername']) && isset($_SESSION['attemptPassword']) && isset($_SESSION['Version'])){
+			//must change this to take password from server
+			$version = $_SESSION['Version'];
+			$usernameLog = $_SESSION['username'];
+			if($_SESSION['Version']!='admin' && $_SESSION['Version']!='student'){
+				header("Location: accessCheck.php"); /* Redirect browser */
+				exit();
+			}
+			if($_SESSION['username']!=$_SESSION['attemptUsername'] && $_SESSION['password']!=$_SESSION['attemptPassword']){
+				header("Location: accessCheck.php"); /* Redirect browser */
+				exit();
+			}
+			else{
+				//dunno if i need this
+				//$_SESSION['username']="";
+				//$_SESSION['password']="";
+			}
+			if($_SESSION['Version']=='admin'){
+				echo '<link href="css/assMarksADMIN.css" rel="stylesheet">';
+				echo '<script>var version="admin"</script>';
+				//echo '<script type="text/javascript" src="assMarks.js"></script>';
+			}
+			else{
+				echo '<script>var version="notAdmin"</script>';
+			}
+		}
+		else{
+			header("Location: accessCheck.php"); /* Redirect browser */
+			exit();
+		}
+	?>
+    <!-- Page Content -->
+	<section id="main3" class="main">
+		<div class="container">
+			<br>
+			<div class="row">
+				<div class="col-lg-12 text-center"><br>
+					<button id="backBut" type="button" class="btn btn-danger main3But"><h4><b>BACK</b></h4></button>
+					<button id="refreshBut" type="button" class="btn btn-danger main3But"><h4><b>REFRESH</b></h4></button>
+					<?php
+						if($_SESSION['Version']=='admin'){
+							echo '<button id="filterBut" type="button" class="btn btn-danger main3But"><h4><b>FILTER</b></h4></button>';
+							echo '<button id="csvBut" type="button" class="btn btn-danger main3But"><h4><b> CSV <span class="glyphicon glyphicon-download-alt"></span></b></h4></button>';
+						}
+					?>
+					<h1 id="dateTitle" style='float:right;'>Jane 18/17</h1>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+						<form id="filterBox" class="form-inline">
+							<div class="form-group">
+								<select class="form-control" id="flagFilt">
+									<option value="">Please Select</option>
+									<option value="flaggedRow">Flagged</option>
+									<option value="notFlaggedRow">Not Flagged</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="studentNumberFilt" placeholder="Student Number">
+							</div>
+							<div class="form-group">
+								<select class="form-control" id="missedAssFilt">
+									<option value=0>Number of No Submissions</option>
+									<option value=1>1</option>
+									<option value=2>2</option>
+									<option value=3>3</option>
+									<option value=4>4</option>
+									<option value=5>5</option>
+									<option value=6>6</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<select class="form-control" id="msafFilt">
+									<option value="">Please Select</option>
+									<option value="msafUsed">MSAF Used</option>
+								</select>
+							</div>
+						</form>
+				</div>
+			</div>
+			<br>
+			<div class="row justify-content-center">
+				<div class="col-lg-12 text-center">
+					<h1>Assignment Grades For ENG 1C03</h1><br>
+					<div  id="dataTableCont">
+					<div id="demo">
+						<!-- Responsive table starts here -->
+						<!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+						<div class="table-responsive-vertical shadow-z-1">
+							<!-- Table starts here -->
+							<table id="table" class="table table-hover table-mc-red">
+								<?php
+									echo '<thead id="thead">';
+									echo '<tr>';
+										$servername = "localhost";
+										$username = "root";
+										$password = "";
+										$db = "cadgrader";
+										$port = 90;
+																					
+										// Create connection
+										$conn = new mysqli($servername, $username, $password, $db);
+
+										// Check connection
+										if ($conn->connect_error) {
+											die("Connection failed: " . $conn->connect_error);
+										}
+										$sql = "SHOW COLUMNS FROM ass_marks";
+										$result = mysqli_query($conn,$sql);
+										$numCols=0;
+										if($version=="admin"){
+											while($row = mysqli_fetch_array($result)){
+												echo "<th>".$row['Field']."</th>";
+												$numCols+=1;
+											}
+										}
+										elseif($version=="student"){
+											while($row = mysqli_fetch_array($result)){
+												if($row['Field']!="Flag"){
+													echo "<th>".$row['Field']."</th>";
+												}
+												$numCols+=1;
+											}
+										}
+									echo '</tr>';
+									echo '</thead>';
+									echo '<tbody>';
+									
+										$counter=1;
+										
+										$query="SELECT * FROM ass_marks";
+										$res = mysqli_query($conn, $query);
+										
+										while($row = mysqli_fetch_array($res))
+										{
+											if($version=="admin"){
+												echo "<tr class='notFlaggedRow'>";
+												for($i=0; $i<$numCols; $i++) {
+													if($i==0){
+														if(htmlspecialchars($row[$i])=="flagged"){
+															echo "<td data-title='Flag' class='flaggedBox'><span class='glyphicon glyphicon-ok' style='z-index:10;'></span></td>";
+														}
+														elseif(htmlspecialchars($row[$i])=="notFlagged"){
+															echo "<td data-title='Flag' class='notFlaggedBox'><span class='glyphicon glyphicon-minus' style='z-index:10;'></span></td>";
+														}
+													}
+													else{
+														echo '<td>' . htmlspecialchars($row[$i]) . '</td>';
+													}
+													//echo $row[$i]."<br>"; add flaggedRow class for flagged boxes
+												}
+												echo "</tr>";
+											}
+											elseif($version=="student"){
+												if(htmlspecialchars($row[1])==$usernameLog){
+													echo "<tr>";
+													for($i=1; $i<$numCols; $i++) {
+														echo '<td>' . htmlspecialchars($row[$i]) . '</td>';
+														//echo $row[$i]."<br>";
+													}
+													echo "</tr>";
+												}
+											}
+										}
+										mysqli_close($conn);
+									echo '</tbody>';
+									?>
+							</table>
+						</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</section>	
+	<!-- jQuery Version 1.11.1 after uploading to server change this
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!--<script src="js/three.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/detector.js"></script>-->
+	<script>
+		//var version = <?php echo json_encode($version); ?>;
+		//var usernameLog = <?php echo json_encode($usernameLog); ?>;
+	</script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/assMarks.js"></script>
+	<?php
+		if($_SESSION['Version']=='admin'){
+			echo '<script type="text/javascript" src="js/assMarksADMIN.js"></script>';
+		}
+	?>
+</body>
+</html>

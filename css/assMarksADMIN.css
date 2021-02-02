@@ -1,0 +1,14 @@
+td{
+	font-weight:light;
+	-webkit-transition: font-weight 2s; /* Safari */
+    transition: font-weight 2s;
+}
+
+td:hover{
+	font-weight:normal;
+}
+
+.flaggedRow{
+	background-color:#ffccbc;
+	opacity:1;
+}

@@ -1,0 +1,23 @@
+Flag,Student Number,Assignment Name,Submission File Name,Answer File Name,Version,Volume Mark,Surface Area Mark,Center of Gravity Mark,Moment of Inertia Mark,Subjective Mark,Total Mark
+Not Flagged,400011111,Lab Week 1,400011111_VA.pdf,Answer_VA.pdf,VA,-,-,-,-,0/0,0/0
+Not Flagged,400011111,Lab Week 1,400011111_VC.pdf,Answer_VC.pdf,VC,-,-,-,-,0/0,0/0
+Not Flagged,400022222,Lab Week 1,400022222_VA.pdf,Answer_VA.pdf,VA,-,-,-,-,0/0,0/0
+Not Flagged,400022222,Lab Week 1,400022222_VC.pdf,Answer_VC.pdf,VC,-,-,-,-,0/0,0/0
+Not Flagged,400033333,Lab Week 1,400033333_VA.pdf,Answer_VA.pdf,VA,-,-,-,-,0/0,0/0
+Not Flagged,400033333,Lab Week 1,400033333_VC.pdf,Answer_VC.pdf,VC,-,-,-,-,0/0,0/0
+Not Flagged,400044444,Lab Week 1,400044444_VA.pdf,Answer_VA.pdf,VA,-,-,-,-,0/0,0/0
+Not Flagged,400044444,Lab Week 1,400044444_VC.pdf,Answer_VC.pdf,VC,-,-,-,-,0/0,0/0
+Not Flagged,400055555,Lab Week 1,400055555_VA.pdf,Answer_VA.pdf,VA,-,-,-,-,0/0,0/0
+Not Flagged,400055555,Lab Week 1,400055555_VC.pdf,Answer_VC.pdf,VC,-,-,-,-,0/0,0/0
+Not Flagged,400011111,Lab Week 1,400011111_VA.stl,Answer_VA.stl,VA,5/5,5/5,5/5,5/5,13/20,33/40
+Not Flagged,400011111,Lab Week 1,400011111_VC.stl,Answer_VC.stl,VC,5/5,5/5,5/5,5/5,0/0,20/20
+Not Flagged,400011112,Lab Week 1,400011112_VA.stl,Answer_VA.stl,VA,5/5,5/5,5/5,5/5,0/0,20/20
+Not Flagged,400011113,Lab Week 1,400011113_VA.stl,Answer_VA.stl,VA,5/5,5/5,5/5,5/5,0/0,20/20
+Flagged,400022222,Lab Week 1,400022222_VA.stl,Answer_VA.stl,VA,5/5,5/5,5/5,0/5,0/0,15/20
+Flagged,400022222,Lab Week 1,400022222_VC.stl,Answer_VC.stl,VC,5/5,5/5,5/5,0/5,0/0,15/20
+Flagged,400033333,Lab Week 1,400033333_VA.stl,Answer_VA.stl,VA,0/5,0/5,0/5,0/5,0/0,0/20
+Flagged,400033333,Lab Week 1,400033333_VC.stl,Answer_VC.stl,VC,5/5,5/5,0/5,0/5,0/0,10/20
+Not Flagged,400044444,Lab Week 1,400044444_VA.stl,Answer_VA.stl,VA,5/5,5/5,5/5,5/5,0/0,20/20
+Not Flagged,400044444,Lab Week 1,400044444_VC.stl,Answer_VC.stl,VC,5/5,5/5,5/5,5/5,0/0,20/20
+Not Flagged,400055555,Lab Week 1,400055555_VA.stl,Answer_VA.stl,VA,5/5,5/5,5/5,5/5,0/0,20/20
+Not Flagged,400055555,Lab Week 1,400055555_VC.stl,Answer_VC.stl,VC,5/5,5/5,5/5,5/5,0/0,20/20

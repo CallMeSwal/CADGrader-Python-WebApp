@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link href="css/index.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Cabin' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>CADGrader</title>
+  </head>
+  <body>
+    <!--login
+    <div id="main1" class="main">
+      <form action="/action_page.php" id="loginForm">
+        <input type="text" id="userName" name="userName" placeholder="Enter Username">
+        <br>
+        <input type="password" id="password" name="password" placeholder="Enter Password">
+        <br>
+        <input type="button" id="loginButton" name="loginButton" class="btn blue" value="Login">
+      </form>
+      <div id="links">
+        <a href="#">Website</a>
+        <a href="#">Lisence</a>
+      </div>
+    </div>-->
+    <div id="mainNEWASS" class="main">
+      <!--<input type="text" id="newAssName" placeholder="Enter Assignment Name" maxlength="18">-->
+	  <h2 id="assNameLabel">CADGrader Student Version</h2>
+	  <p id="uniLabel">For McMaster University</p>
+      <h3>Select Marking Metrics</h3>
+      <btn type="button" id="tolerance" class="btn blue">Tolerance</btn>
+      <btn type="button" id="createAssBut" class="btn blue">Create</btn>
+      <div id="checkBoxes">
+        <label for="Vol"><input type="checkbox" name="Vol" id="Vol" />Volume</label><br/>
+        <label for="SA"><input type="checkbox" name="SA" id="SA" />Surface Area</label><br/>
+        <label for="CoG"><input type="checkbox" name="CoG" id="CoG" />Center of Gravity</label><br/>
+        <label for="MoI"><input type="checkbox" name="MoI" id="MoI" />Moment of Inertia</label>
+      </div>
+      <div id="drag-file">
+        <!--<p id="drag-file-text"><span id="textDragFile">Drag Answer Files Here<br>Or<br></span><btn type="button" id="select-file" class="btn blue">Select</btn></p>-->
+		<!--select answer file-->
+		<p id="drag-file-text"><span id="textDragFile">Choose Answer STL File<br>...<br></span><btn type="button" id="selectServerFile" class="btn blue">Select</btn></p>
+      </div>
+      <!--<btn type="button" id="back3" class="btn but2 red backBut">Back</btn>-->
+    </div>
+    <div id="toleranceSelection" class="main">
+      <i id="closeTolerance" class="material-icons red">close</i>
+      <h2>Set Tolerance</h2>
+      <div id="toleranceCheckbox">
+        <div id ="VolTol">
+          <h3>Volume</h3>
+          <label><input type="text" id="tol00" class="tol" placeholder="1/5" maxlength="2" value="25" > %</label><label><input type="text" id="tol01" class="tol" placeholder="2/5" maxlength="2" value="20"> %</label><label><input type="text" class="tol" id="tol02" placeholder="3/5" maxlength="2" value="15"> %</label><label><input type="text" id="tol03" class='tol' placeholder="4/5" maxlength="2" value="10"> %</label><label><input type="text" id="tol04" class='tol' placeholder="5/5"  maxlength="2" value="5"> %</label>
+        </div>
+        <div id ="SATol">
+          <h3>Surface Area</h3>
+          <label><input type="text" id="tol10" class="tol" placeholder="1/5" maxlength="2" value="25" > %</label><label><input type="text" id="tol11" class="tol" placeholder="2/5" maxlength="2" value="20"> %</label><label><input type="text" class="tol" id="tol12" placeholder="3/5" maxlength="2" value="15"> %</label><label><input type="text" id="tol13" class='tol' placeholder="4/5" maxlength="2" value="10"> %</label><label><input type="text" id="tol14" class='tol' placeholder="5/5"  maxlength="2" value="5"> %</label>
+        </div>
+        <div id ="CoGTol">
+          <h3>Center of Gravity</h3>
+          <label><input type="text" id="tol20" class="tol" placeholder="1/5" maxlength="2" value="25" > %</label><label><input type="text" id="tol21" class="tol" placeholder="2/5" maxlength="2" value="20"> %</label><label><input type="text" class="tol" id="tol22" placeholder="3/5" maxlength="2" value="15"> %</label><label><input type="text" id="tol23" class='tol' placeholder="4/5" maxlength="2" value="10"> %</label><label><input type="text" id="tol24" class='tol' placeholder="5/5"  maxlength="2" value="5"> %</label>
+        </div>
+        <div id ="MoITol">
+          <h3>Moment of Inertia</h3>
+          <label><input type="text" id="tol30" class="tol" placeholder="1/5" maxlength="2" value="25" > %</label><label><input type="text" id="tol31" class="tol" placeholder="2/5" maxlength="2" value="20"> %</label><label><input type="text" class="tol" id="tol32" placeholder="3/5" maxlength="2" value="15"> %</label><label><input type="text" id="tol33" class='tol' placeholder="4/5" maxlength="2" value="10"> %</label><label><input type="text" id="tol34" class='tol' placeholder="5/5"  maxlength="2" value="5"> %</label>
+        </div>
+      </div>
+    </div>
+	<div id="ansFileSelection" class="main">
+      <i id="closeAnsFile" class="material-icons red">close</i>
+	  <input type="text" id="ansFileFilt" placeholder="Select Answer File" maxlength="18">
+	  <div id="ansFiles">
+		<?php
+		$dir = "../file_practice_answer/";
+
+		// Open a directory, and read its contents
+		if (is_dir($dir)){
+		  if ($dh = opendir($dir)){
+			echo '<form action="">';
+			$counter=0;
+			while (($file = readdir($dh)) !== false){
+				if($counter>1){//<label for="MoI"><input type="checkbox" name="MoI" id="MoI" />Moment of Inertia</label>
+					echo '<span><input type="radio" id="'.$file.'" name="gender" value="'.$file.'"><label for="'.$file.'">'.$file.'<span><i class="material-icons">assignment</i></span></label></span><br>';
+				}
+				$counter+=1;
+			}
+			echo '<form>';
+			closedir($dh);
+			
+		  }
+		}
+		?>
+	  </div>
+    </div>
+    <div id="mainStudentFiles" class="main">
+      <h2 id="assNameLabel">CADGrader Student Version</h2>
+	  <p id="uniLabel">For McMaster University</p>
+      <btn type="button" id="markBut" class="btn blue">Mark</btn>
+      <btn type="button" id="back4" class="btn but2 red backBut">Back</btn>
+      <div id="drag-file2">
+        <p id="drag-file-text2"><span id="textDragFile2">Choose Submission STL File<br>...<br></span><btn type="button" id="select-file2" class="btn blue">Select</btn></p>
+        <input type="file" class="file" id="attachement2" name="files[]" style="display: none;" onchange="fileSelected2(this)"/>
+      </div>
+    </div>
+    <div id="companyMantra">
+      <h2 id="companySlogan">Automatically Grade CAD</h2>
+      <h1 id="companyName">CADGrader</h1>
+      <img src="img/quarterGear.png" height="100" width="100">
+    </div>
+  </body>
+  <!--Add jQuery-->
+  <script>
+  </script>
+
+  <!--Add JS Files-->
+  <script src="js/main1.js"></script>
+</html>
