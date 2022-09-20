@@ -1,10 +1,8 @@
 # CADGrader - Web App that I independently designed, built, deployed to analyze CAD files.
 
-## Built with Python, JavaScript, Electron, NumPy, SQL, Three.js
+## Demo: https://youtu.be/CFAUK3HcKwg, https://2018.pycon.ca/talks/talk-PC-55271/
 
-### Demo: https://youtu.be/CFAUK3HcKwg
-
-### Presented at PyCon 2018: https://2018.pycon.ca/talks/talk-PC-55271/
+Built with Python, JavaScript, Electron, NumPy, SQL, Three.js
 
 ### Motivation for Project
 Like most other engineering schools, McMaster University has a first year computer aided design course. Generally, students enjoy this class because they get to 3D model interesting mechanisms. The course teaching assistants do not enjoy the class as much because they have to mark the students’ 3D models. Not only is the 3D model marking process extremely tedious, it is also incredibly boring.
