@@ -1,6 +1,7 @@
 # CADGrader - Web App that I independently designed, built, deployed to analyze CAD files.
 
 ## Demo: https://youtu.be/CFAUK3HcKwg, https://2018.pycon.ca/talks/talk-PC-55271/
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/CFAUK3HcKwg/0.jpg)](https://www.youtube.com/watch?v=CFAUK3HcKwg)
 
 Built with Python, JavaScript, Electron, NumPy, SQL, Three.js
 
