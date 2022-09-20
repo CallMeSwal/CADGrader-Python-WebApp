@@ -1,37 +1,31 @@
-# [Start Bootstrap](http://startbootstrap.com/) - [Agency](http://startbootstrap.com/template-overviews/agency/)
+# CADGrader - Web App that I independently designed, built, deployed to analyze CAD files.
 
-[Agency](http://startbootstrap.com/template-overviews/agency/) is a one page agency portfolio theme for [Bootstrap](http://getbootstrap.com/) created by [Start Bootstrap](http://startbootstrap.com/). This theme features several content sections, a responsive portfolio grid with hover effects, full page portfolio item modals, a responsive timeline, and a working PHP contact form.
+## Built with Python, JavaScript, Electron, NumPy, SQL, Three.js
 
-## Getting Started
+Demo: https://youtu.be/CFAUK3HcKwg
+Presented at PyCon 2018: https://2018.pycon.ca/talks/talk-PC-55271/
 
-Several options are available to get started quickly:
-* [Download the latest release on Start Bootstrap](http://startbootstrap.com/template-overviews/agency/)
-* Clone the repo: `git clone https://github.com/BlackrockDigital/startbootstrap-agency.git`
-* Fork the repo
+### Motivation for Project
+Like most other engineering schools, McMaster University has a first year computer aided design course. Generally, students enjoy this class because they get to 3D model interesting mechanisms. The course teaching assistants do not enjoy the class as much because they have to mark the students’ 3D models. Not only is the 3D model marking process extremely tedious, it is also incredibly boring.
 
-## Developing Using Source Files
+To manually mark the 3D models, TAs have to open each student submission and visually compare the model to the answer file. Since this process is highly subjective, it leads to a high level of inconsistency among student grades.
 
-To use the source files, you will need to have npm installed globally along with Gulp.js. To start:
-* Run `npm install` in the root directory
-* Run `gulp dev` and edit the files as needed
+### Implementation of Project
+A year ago, I started developing a web application (CADGrader) that would solve these issues. CADGrader was successfully implemented at McMaster University during the 2017-2018 school year. Over 900 students, TAs, and faculty members used CADGrader over the course of two semesters. The engineering faculty renewed use of CADGrader for the upcoming school year.
 
-If you need to update the plugins included with this template, simply run the following tasks:
-* First run `npm update` to update the dependencies
-* Then run `gulp copy` to copy the new versions to their proper destinations
+I built the CADGrader website with three key objectives: dramatically reduce the time TAs spent marking assignments; decrease the discrepancy between student grades; integrate all assignment processing components(assignment marking, student feedback, student help, assignment file storage, etc) in one application.
 
-## Bugs and Issues
+The finished program is an online website that automatically marks CAD files. On the website, TAs can review marked assignments and ensure that the software graded each file correctly. Also, TAs can provide assignment feedback directly to the students via the website. Moreover, Students have access to an assignment checker on the website. Using the assignment checker, students can upload practice CAD assignments and receive a real time grade from the software.
 
-Have a bug or an issue with this template? [Open a new issue](https://github.com/BlackrockDigital/startbootstrap-agency/issues) here on GitHub or leave a comment on the [template overview page at Start Bootstrap](http://startbootstrap.com/template-overviews/agency/).
+### How CADGrader Works
+Student assignments are uploaded directly to the CADGrader website. CADGrader objectively grades assignments by comparing each student file with the correct answer file. Using numpy-stl(a python library), CAGrader converts each 3D model into a 3D matrix. With numerical analysis, CADGrader measures the similarity between these different matrices and assigns a grade accordingly. After CADGrader marks each submission, the software distributes the assignments to the course TAs for review. Within the software, TAs can view each assignment and ensure that the files were marked correctly. The assignment viewer allows TAs to view a student file and answer file at the same time. TAs can send feedback to the student through this modal, as well. CADGrader automatically flags assignments that receive abnormally low marks. This prompts TAs to pay extra attention to these assignments.
 
-## Creator
+On CADGrader, students have access to a Practice CAD tool. Students can upload completed CAD assignments to the tool and CADGrader instantly grades the assignment for the student. This feature allows students to practice CAD on their own time. The most common question that TAs receive from students is whether or not their CAD model is correct. The Practice CAD tool answers this question for students and frees up time for TAs. This allows TAs to focus on the students that need the most help in the course.
 
-Start Bootstrap was created by and is maintained by **[David Miller](http://davidmiller.io/)**, Owner of [Blackrock Digital](http://blackrockdigital.io/).
+### Python and Software using in CADGrader
+Python forms the cornerstone of CADGrader’s infrastructure. Numpy and numpy-stl are used extensively to analyze the CAD files. Additionally, python is used to make SQL queries. A large amount of the functionality on the CADGrader website is built with JavaScript. The website runs python code with AJAX calls and CGI scripts.
 
-* https://twitter.com/davidmillerskt
-* https://github.com/davidtmiller
+### Future of Project
+At the beginning of this project, my intention was to build a software product that allowed the university to reduce TA hours. I later realized that humans and machines are best suited for different tasks. Software should handle grunt and menial tasks while humans work on the more intellectually challenging issues. By automating the boring stuff, the TAs’ jobs became much more enjoyable. I have personally seen TAs transition from begrudgingly filling out long Excel sheets to enthusiastically explaining course concepts to students.
 
-Start Bootstrap is based on the [Bootstrap](http://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
-
-## Copyright and License
-
-Copyright 2013-2016 Blackrock Digital LLC. Code released under the [MIT](https://github.com/BlackrockDigital/startbootstrap-agency/blob/gh-pages/LICENSE) license.
+This shift in thinking has drastically changed my future UX designs. I no longer see the software and TAs as competing entities. Instead, CADGrader has become a tool that allows teaching assistants to be more successful at their jobs."
